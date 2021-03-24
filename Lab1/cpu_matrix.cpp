@@ -54,13 +54,13 @@ CPUMatrix CPUMatrix::multiply(const CPUMatrix &other) const
     CPUMatrix result(height(), other.width());
 
     const size_t N = std::max(1U, std::thread::hardware_concurrency());
-    const size_t ROWS_PER_JOB = (size_t)ceil((double)result.height() / N);
+    const size_t ROWS_PER_JOB = (result.height() + N - 1) / N;
 
     auto multiplyRows = [N, ROWS_PER_JOB](const CPUMatrix *a, const CPUMatrix *b,
         CPUMatrix *result, size_t index)
     {
         const size_t
-            startRow = std::min(index * ROWS_PER_JOB, result->height()),
+            startRow = index * ROWS_PER_JOB,
             endRow = std::min((index + 1) * ROWS_PER_JOB, result->height());
 
         for (size_t i = startRow; i < endRow; i++)

@@ -5,6 +5,26 @@
 
 #include "gpu_matrix.h"
 
+void GPUMatrix::allocateMemory()
+{
+    cudaMalloc(&_data, dataSize());
+
+    cudaMalloc(&_cudaData, sizeof(CudaMatrixData));
+    CudaMatrixData data({ _height, _width, _data });
+    cudaMemcpy(_cudaData, &data, sizeof(CudaMatrixData), cudaMemcpyHostToDevice);
+}
+
+void GPUMatrix::freeMemory()
+{
+    cudaFree(_data);
+    cudaFree(_cudaData);
+}
+
+GPUMatrix::GPUMatrix(size_t height, size_t width) : BaseMatrix(height, width)
+{
+    allocateMemory();
+}
+
 GPUMatrix::GPUMatrix(const CPUMatrix &m) : GPUMatrix(m.height(), m.width())
 {
     cudaMemcpy(_data, m.data(), dataSize(), cudaMemcpyHostToDevice);
@@ -23,11 +43,13 @@ GPUMatrix::GPUMatrix(GPUMatrix &&other) : BaseMatrix(std::move(other))
 
 GPUMatrix &GPUMatrix::operator=(const GPUMatrix &other)
 {
-    cudaFree(_data);
+    freeMemory();
 
     _height = other._height;
     _width = other._width;
-    cudaMalloc(reinterpret_cast<void **>(&_data), dataSize());
+    
+    allocateMemory();
+
     cudaMemcpy(_data, other.data(), dataSize(), cudaMemcpyDeviceToDevice);
 
     return *this;
@@ -35,8 +57,7 @@ GPUMatrix &GPUMatrix::operator=(const GPUMatrix &other)
 
 GPUMatrix::~GPUMatrix()
 {
-    cudaFree(_data);
-    cudaFree(_cudaData);
+    freeMemory();
 }
 
 CPUMatrix GPUMatrix::toCPU()
@@ -99,13 +120,4 @@ GPUMatrix GPUMatrix::multiply(const GPUMatrix &other) const
 CPUMatrix GPUMatrix::multiply(const CPUMatrix &other) const
 {
     return multiply(GPUMatrix(other)).toCPU();
-}
-
-GPUMatrix::GPUMatrix(size_t height, size_t width) : BaseMatrix(height, width)
-{
-    cudaMalloc(&_data, dataSize());
-
-    cudaMalloc(&_cudaData, sizeof(CudaMatrixData));
-    CudaMatrixData data({ _height, _width, _data });
-    cudaMemcpy(_cudaData, &data, sizeof(CudaMatrixData), cudaMemcpyHostToDevice);
 }

@@ -31,5 +31,8 @@ protected:
     CudaMatrixData *_cudaData;
 
     GPUMatrix(size_t height = 0, size_t width = 0);
+
+    void allocateMemory();
+    void freeMemory();
 };
 
