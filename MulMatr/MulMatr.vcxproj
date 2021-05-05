@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{BBF3AD3A-0751-45A9-92E7-F6D822D49F85}</ProjectGuid>
+    <ProjectGuid>{7F47821E-E7CE-4948-B576-19CA10CE530C}</ProjectGuid>
     <RootNamespace>Lab1</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -80,6 +80,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <CudaCompile Include="gpu_matrix.cu" />
+    <CudaCompile Include="gpu_sh_mem_matrix.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cpu_matrix.cpp" />
@@ -89,6 +90,7 @@
     <ClInclude Include="base_matrix.h" />
     <ClInclude Include="cpu_matrix.h" />
     <ClInclude Include="gpu_matrix.h" />
+    <ClInclude Include="gpu_sh_mem_matrix.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

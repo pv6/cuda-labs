@@ -4,6 +4,7 @@
 
 #include "cpu_matrix.h"
 #include "gpu_matrix.h"
+#include "gpu_sh_mem_matrix.h"
 
 template <typename Matrix>
 struct TestResult
@@ -63,11 +64,13 @@ int main(int argc, char *argv[])
 
         TestResult<CPUMatrix> cpuResult = testPerformance(a, b);
         TestResult<GPUMatrix> gpuResult = testPerformance(GPUMatrix(a), GPUMatrix(b));
+        TestResult<GPUMatrix> gpuShMemResult = testPerformance<GPUMatrix>(GPUShMemMatrix(a), GPUShMemMatrix(b));
         double distance = CPUMatrix::distance(cpuResult.resultMatrix,
-            gpuResult.resultMatrix.toCPU());
+            gpuShMemResult.resultMatrix.toCPU());
 
         std::cout << "Time on CPU: " << cpuResult.time << " s" << std::endl;
         std::cout << "Time on GPU: " << gpuResult.time << " s" << std::endl;
+        std::cout << "Time on GPU w/ shared memory: " << gpuShMemResult.time << " s" << std::endl;
         std::cout << "CPU and GPU result distance: " << distance << std::endl;
     }
 

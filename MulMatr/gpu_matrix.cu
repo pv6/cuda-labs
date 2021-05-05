@@ -89,6 +89,12 @@ __global__ void mulMatrKernel(const CudaMatrixData *a, const CudaMatrixData *b,
         res->data[index] += a->data[i * a->width + k] * b->data[k * b->width + j];
 }
 
+void GPUMatrix::callKernel(const dim3 &cudaBlocks, const dim3 &cudaThreads,
+    const CudaMatrixData *a, const CudaMatrixData *b, CudaMatrixData *result) const
+{
+    mulMatrKernel<<<cudaBlocks, cudaThreads>>>(a, b, result);
+}
+
 GPUMatrix GPUMatrix::multiply(const GPUMatrix &other) const
 {
     if (_width != other._height)
@@ -107,7 +113,7 @@ GPUMatrix GPUMatrix::multiply(const GPUMatrix &other) const
     cudaEvent_t endEvent;
     cudaEventCreate(&endEvent);
 
-    mulMatrKernel<<<cudaBlocks, cudaThreads>>>(_cudaData, other._cudaData, result._cudaData);
+    callKernel(cudaBlocks, cudaThreads, _cudaData, other._cudaData, result._cudaData);
 
     cudaEventRecord(endEvent, stream);
     cudaEventSynchronize(endEvent);

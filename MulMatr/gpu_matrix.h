@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector_types.h>
+
 #include "base_matrix.h"
 #include "cpu_matrix.h"
 
@@ -34,5 +36,7 @@ protected:
 
     void allocateMemory();
     void freeMemory();
-};
 
+    virtual void callKernel(const dim3 &cudaBlocks, const dim3 &cudaThreads,
+        const CudaMatrixData *a, const CudaMatrixData *b, CudaMatrixData *result) const;
+};

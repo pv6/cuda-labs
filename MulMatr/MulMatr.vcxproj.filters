@@ -20,6 +20,9 @@
     <CudaCompile Include="gpu_matrix.cu">
       <Filter>Source files</Filter>
     </CudaCompile>
+    <CudaCompile Include="gpu_sh_mem_matrix.cu">
+      <Filter>Source files</Filter>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base_matrix.h">
@@ -29,6 +32,9 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="gpu_matrix.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpu_sh_mem_matrix.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
